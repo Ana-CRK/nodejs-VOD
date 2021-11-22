@@ -1,10 +1,22 @@
 const express = require('express');
 const app = express();
 
+const session = require('express-session');
+const { flash } = require('express-flash-message');
+
 require('dotenv').config()
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+app.use(session({
+    secret: 'azerty',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { expires: 60 * 1000 }
+}));
+
+app.use(flash({ sessionKeyName: 'flashMessage' }));
 
 app.set('view engine', 'ejs');
 
@@ -18,9 +30,10 @@ const userController = require('./controllers/UserController');
 app.get('/', (req, res) => {
     res.render('index.ejs');
 })
-app.get('/signup', (req, res) => {
+app.get('/signup', async (req, res) => {
     console.log('get signup');
-    res.render('signup.ejs');
+    const errors = await req.consumeFlash('error');
+    res.render('signup.ejs', {errors});
 })
 app.post('/signup', userController.signUp)
 

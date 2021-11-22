@@ -10,6 +10,12 @@ exports.signUp = async(req, res, next) => {
         email: req.body.email,
         password: hashedPassword
     });
-    user.save();
-    res.redirect('/');
+    user.save(function(err) {
+        if (err) {
+            req.flash('error', 'Hmm.. il nous semble que ' + user.email + ' existe déjà');
+            res.redirect('/signup');
+        } else {
+            res.redirect('/');
+        }
+    });
 }

@@ -9,6 +9,11 @@
 </head>
 <body>
     <h1>Inscription</h1>
+    <%if (locals.errors) { %>
+        <% for (let error of errors) {%>
+            <h2><%= error%></h2>
+        <% } %>
+    <% } %>
     <form action="/signup" method="post">
         <label for="firstname"><b>Prénom</b></label>
         <input type="text" placeholder="Votre prénom" name="firstname" required>
