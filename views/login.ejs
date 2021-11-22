@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOD</title>
+    <title>VOD - log in</title>
     <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
 </head>
 <header>
     <%- include('components/nav.ejs') %>
 </header>
 <body>
+    <h1>Connexion</h1>
     <%- include('components/flash_message.ejs') %>
-    <h1>Welcome to VOD</h1>
+    <form action="/login" method="post">
+        <label for="email">Email</label>
+        <input type="text" name="email"/>
+        <label for="password">Password</label>
+        <input type="password" name="password"/>
+        <input type="submit" value="Log in"> 
+    </form>
 </body>
 </html>
