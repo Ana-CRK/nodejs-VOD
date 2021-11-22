@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOD</title>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+</head>
+<header>
+    <nav>
+        <ol>
+            <li><a href="/">VOD</a></li>
+            <li><a href="#">Accueil</a></li>
+            <li><a href="/signup">Inscription</a></li>
+            <li><a href="#">Connexion</a></li>
+            <div class="dropdown">
+                <button class="dropbtn">Categories 
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#">Category 1</a>
+                    <a href="#">Category 2</a>
+                    <a href="#">Category 3</a>
+                </div>
+            </div>
+            <div class="search-container">
+                <form action="/search">
+                    <input type="text" placeholder="Rechercher un film" name="search">
+                    <button type="submit">Rechercher</button>
+                </form>
+            </div>
+        </ol>
+    </nav>
+</header>
+<body>
+    <h1>Welcome to VOD</h1>
+</body>
+</html>
