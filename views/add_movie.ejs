@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOD - add movie</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
+</head>
+<header>
+    <%- include('components/nav.ejs') %>
+</header>
+<body>
+    <h1>Film</h1>
+    <form action="/movie/add" method="post" id="add-movie">
+        <fieldset class="form-group">
+            <label for="title"><b>Titre</b></label>
+            <input type="text" placeholder="Titre du film" name="title" id="input-add-movie-title" required>
+            
+            <div id="suggestions-list"></div>
+            
+            <label for="img"><b>Affiche</b></label>
+            <input type="text" placeholder="Url de l'affiche" name="img" id="input-add-movie-img">
+
+            <label for="year"><b>Année de production</b></label>
+            <input type="text" placeholder="Année de production" name="year" id="input-add-movie-year" required>
+        
+            <label for="category"><b>Genre</b></label>
+            <input type="text" placeholder="Genre (action, comédie, sience-fichtion,...)" name="category" id="input-add-movie-category" required>
+            
+            <label for="actors"><b>Acteur(s)</b></label>
+            <input type="text" placeholder="Liste des acteurs" name="actors" id="input-add-movie-actors">
+        </fieldset>
+
+        <fieldset class="form-group">
+            <textarea form="add-movie" name="description" rows="3" id="input-add-movie-description">Synopsis</textarea>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Ajouter</button> 
+    </form>
+    <script>
+        const input = document.getElementById("input-add-movie-title");
+        input.addEventListener('input', (event) => {
+            getMovies(event.target.value);
+        });
+        const parentDiv = document.getElementById('suggestions-list');
+        function getMovies(movie) {
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key=lolno&language=fr&page=1&include_adult=false&query=${movie}`)
+            .then(response => response.json())
+            .then(response => {
+                parentDiv.innerHTML = "";
+                let ul = document.createElement('ul');
+                ul.setAttribute('class', "list-group");
+                for(var i = 0; i < response.results.length; i++) {
+                    let li = document.createElement('li');
+                    li.setAttribute('class', "list-group-item d-flex justify-content-between align-items-center");
+                    let a = document.createElement('a');
+                    a.setAttribute('id', response.results[i].id);
+                    a.setAttribute('href', '#');
+                    a.addEventListener("click", onClickFillForm);
+                    a.innerHTML = response.results[i].title;
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                };
+                parentDiv.appendChild(ul);
+                parentDiv.style.display = 'block';
+            })
+            .catch(err => console.log(err))
+        } 
+
+        function onClickFillForm(event) {
+            let movieId = event.target.id;
+            fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=lolno`)
+                .then(response => response.json())
+                .then((response) => {
+                    console.log(response);
+                    parentDiv.innerHTML = "";
+                    document.getElementById("add-movie").reset();
+                    document.getElementById("input-add-movie-title").value = response.title;
+                    let img = 'https://image.tmdb.org/t/p/w500' + response.poster_path;
+                    document.getElementById("input-add-movie-img").value = img;
+                    let year = response.release_date.split('-')[0];
+                    document.getElementById("input-add-movie-year").value = year;
+                    let category = response.genres[0].name;
+                    document.getElementById("input-add-movie-category").value = category;
+                    getActors(movieId).then((actors) => {
+                        document.getElementById("input-add-movie-actors").value = actors;
+                    })
+                    document.getElementById("input-add-movie-description").innerHTML = response.overview;
+
+                })
+                .catch(err => console.log(err))
+        }
+        function getActors(id) {
+            return fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=lolno`)
+                .then(response => response.json())
+                .then((response) => {
+                    let array = [];
+                    for(var i = 0; i < 5; i++) { 
+                        let name = response.cast[i].name;
+                        array.push(name);
+                    }
+                    let str = array.join(", ");
+                    return str;
+                })
+                .catch(err => console.log(err))
+        }
+    </script>
+</body>
+</html>
+
