@@ -1,5 +1,7 @@
 const Movie = require('../models/MovieModel');
+const fetch = require('cross-fetch');
 
+const key = process.env.API_KEY;
 
 exports.addOne = async(req, res, next) => {
     console.log(req.body);
@@ -20,6 +22,27 @@ exports.addOne = async(req, res, next) => {
             res.redirect('/');
         }
     });
+}
+
+exports.suggestMovies = async(req, res, next) => {
+    let movieTitle = req.params.title;
+    const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=fr&page=1&include_adult=false&query=${movieTitle}`);
+    const data = await response.json();
+    //console.log(data);
+    return res.json(data);
+}
+exports.getMovieDetails = async(req, res, next) => {
+    let movieId = req.params.movieId;
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${key}`);
+    const data = await response.json();
+    //console.log(data);
+    return res.json(data);
+}
+exports.findActors = async(req, res, next) => {
+    let movieId = req.params.movieId;
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${key}`);
+    const data = await response.json();
+    return res.json(data);
 }
 
 exports.searchOne = async(req, res, next) => {

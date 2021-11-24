@@ -43,9 +43,11 @@
         });
         const parentDiv = document.getElementById('suggestions-list');
         function getMovies(movie) {
-            fetch(`https://api.themoviedb.org/3/search/movie?api_key=lolno&language=fr&page=1&include_adult=false&query=${movie}`)
+            fetch(`http://localhost:3000/movie/suggest/${movie}`)
             .then(response => response.json())
             .then(response => {
+                console.log('fetch response in client');
+                console.log(response);
                 parentDiv.innerHTML = "";
                 let ul = document.createElement('ul');
                 ul.setAttribute('class', "list-group");
@@ -68,7 +70,7 @@
 
         function onClickFillForm(event) {
             let movieId = event.target.id;
-            fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=lolno`)
+            fetch(`http://localhost:3000/movie/details/${movieId}`)
                 .then(response => response.json())
                 .then((response) => {
                     console.log(response);
@@ -90,12 +92,14 @@
                 .catch(err => console.log(err))
         }
         function getActors(id) {
-            return fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=lolno`)
+            return fetch(`http://localhost:3000/movie/actors/${id}`)
                 .then(response => response.json())
                 .then((response) => {
+                    console.log(response)
                     let array = [];
-                    for(var i = 0; i < 5; i++) { 
+                    for(var i = 0; i < 5; i++) {
                         let name = response.cast[i].name;
+                        console.log(name);
                         array.push(name);
                     }
                     let str = array.join(", ");

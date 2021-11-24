@@ -10,4 +10,8 @@ router.get('/add', auth, async (req, res) => {
 })
 router.post('/add', movieController.addOne);
 
+router.get('/suggest/:title', movieController.suggestMovies);
+router.get('/details/:movieId', movieController.getMovieDetails);
+router.get('/actors/:movieId', movieController.findActors);
+
 module.exports = router;
