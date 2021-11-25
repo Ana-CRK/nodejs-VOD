@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 
 const session = require('express-session');
-//const { flash } = require('express-flash-message');
+const { flash } = require('express-flash-message');
+
+const passport = require('passport');
 
 require('dotenv').config()
 
@@ -16,7 +18,10 @@ app.use(session({
     cookie: { expires: 60 * 1000 }
 }));
 
-//app.use(flash({ sessionKeyName: 'flashMessage' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash({ sessionKeyName: 'flashMessage', useCookieSession: true }));
 
 app.set('view engine', 'ejs');
 
@@ -26,13 +31,18 @@ mongoose.connect(process.env.DB_VOD)
     .catch(err => console.log('Connection error'));
 
 app.use((req, res, next) => {
-    console.log('logged ?')
     if (req.session.user) {
-        console.log('session ok');
         res.locals.user = req.session.user;
     }
     next();
-})
+});
+
+app.use((req, res, next) => {
+    req.consumeFlash('error').then((flash) => {
+        res.locals.errors = flash;
+        next();
+    });
+});
 
 app.get('/', async (req, res) => {
     res.render('index.ejs');

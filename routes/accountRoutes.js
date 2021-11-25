@@ -9,8 +9,11 @@ router.post('/signup', userController.signUp);
 
 router.get('/login', async (req, res) => {
     res.render('login.ejs');
-})
+});
 router.post('/login', userController.logIn);
+
+router.get('/facebook', userController.facebook);
+router.get('/facebook/callback', userController.facebookCallback);
 
 router.get('/logout', userController.logOut);
 

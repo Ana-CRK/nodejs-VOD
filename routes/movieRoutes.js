@@ -14,4 +14,8 @@ router.get('/suggest/:title', movieController.suggestMovies);
 router.get('/details/:movieId', movieController.getMovieDetails);
 router.get('/actors/:movieId', movieController.findActors);
 
+router.get('/', movieController.getAll);
+router.get('/:id', movieController.getOne);
+
+
 module.exports = router;

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOD - all movies</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/quartz/bootstrap.min.css">
+</head>
+<header>
+    <%- include('components/nav.ejs') %>
+</header>
+<body>
+    <div class="container">
+        <%- include('components/flash_message.ejs') %>
+        <h1>Notre collection de Films</h1>
+        <ul>
+        <% for (let movie of movies) {%>
+            <div class="card bg-light mb-3" style="max-width: 30rem;">
+                <div class="card-header"><%= movie.year%></div>
+                <div class="card-body">
+                    <h4 class="card-title"><a href="/movie/<%= movie.id %>"><%= movie.title%></a></h4>
+                    <img src="<%= movie.img%>" class="img-thumbnail" style="max-width: 15rem;">
+                    <p class="card-text"><%= movie.category%></p>
+                    <p class="card-text"><%= movie.description%></p>
+                </div>
+            </div>
+        <% } %>
+        </ul>
+    </div>
+</body>
+</html>

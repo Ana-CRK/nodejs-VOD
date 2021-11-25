@@ -3,6 +3,17 @@ const fetch = require('cross-fetch');
 
 const key = process.env.API_KEY;
 
+exports.getAll = async(req, res, next) => {
+    const movies = await Movie.find();
+    console.log(movies);
+    res.render('all_movies.ejs', { movies })
+}
+
+exports.getOne = async(req, res, next) => {
+    const movie = await Movie.findOne({_id: req.params.id});
+    res.render('one_movie.ejs', { movie })
+}
+
 exports.addOne = async(req, res, next) => {
     console.log(req.body);
     let actors = req.body.actors.split(", "); 
