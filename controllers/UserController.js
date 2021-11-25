@@ -1,24 +1,8 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const passport = require('passport');
-
-exports.google = (req, res, next) => {
-    console.log('google login');
-    console.log(passport);
-    passport.authenticate('google', { scope: ['profile'] });
-}
-
-exports.googleCallback = () => {
-    console.log('google callback');
-    passport.authenticate('google', { 
-        successRedirect: '/', 
-        failureRedirect: '/account/signup' 
-    })
-}
 
 exports.signUp = async(req, res, next) => {
-    //console.log(req.body);
     const userExists = await User.findOne({email: req.body.email});
     if (userExists) {
         req.flash('error', 'Hmm.. il nous semble que ' + req.body.email + ' existe déjà. Connectez-vous');
