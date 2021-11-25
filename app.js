@@ -4,8 +4,6 @@ const app = express();
 const session = require('express-session');
 const { flash } = require('express-flash-message');
 
-const passport = require('passport');
-
 require('dotenv').config()
 
 app.use(express.urlencoded({extended: true}));
@@ -18,8 +16,7 @@ app.use(session({
     cookie: { expires: 60 * 1000 }
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+require('./passport')(app);
 
 app.use(flash({ sessionKeyName: 'flashMessage', useCookieSession: true }));
 

@@ -2,34 +2,16 @@ const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
 
-
-passport.use(new FacebookStrategy({
-    clientID: process.env.ID_APP_FACEBOOK,
-    clientSecret: process.env.KEY_FACEBOOK,
-    callbackURL: "http://localhost:3000/account/facebook/callback",
-    passReqToCallback: true
-},
-(request, accessToken, refreshToken, profile, done) => {
-    console.log('new facebook strategy');
-    request.session.user = {
-        firstname : profile.displayName,
-        lastname : '',
-        email: ''
-    };
-    return done(null, request.session.user);
-}));
-
-
-exports.facebook = (req, res, next) => {
-    //console.log('facebook login');
-    //console.log(passport);
-    passport.authenticate('facebook', { scope: ['profile'] })
+exports.google = (req, res, next) => {
+    console.log('google login');
+    console.log(passport);
+    passport.authenticate('google', { scope: ['profile'] });
 }
 
-exports.facebookCallback = () => {
-    passport.authenticate('facebook', { 
+exports.googleCallback = () => {
+    console.log('google callback');
+    passport.authenticate('google', { 
         successRedirect: '/', 
         failureRedirect: '/account/signup' 
     })
