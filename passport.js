@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const TwitterStrategy = require('passport-twitter');
+const TwitterStrategy = require('passport-twitter').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 
 module.exports = (app) => {
     app.use(passport.initialize());
@@ -14,6 +15,12 @@ module.exports = (app) => {
 
     app.get('/auth/twitter', passport.authenticate('twitter'));
     app.get('/auth/twitter/callback', passport.authenticate('twitter', { 
+        successRedirect: '/', 
+        failureRedirect: '/account/signup' 
+    }));
+
+    app.get('/auth/github', passport.authenticate('github'));
+    app.get('/auth/github/callback', passport.authenticate('github', { 
         successRedirect: '/', 
         failureRedirect: '/account/signup' 
     }));
@@ -42,6 +49,23 @@ module.exports = (app) => {
     },
     (request, token, tokenSecret, profile, cb) => {
         //console.log(profile);
+        request.session.user = {
+            id: 0,
+            firstname : profile.displayName,
+            lastname : ''
+        }
+        return cb(null, request.session.user);
+    }));
+
+    passport.use(new GitHubStrategy({
+        clientID: process.env.ID_APP_GITHUB,
+        clientSecret: process.env.APP_SECRET_GITHUB,
+        callbackURL: "/auth/github/callback",
+        passReqToCallback: true
+
+    },
+    (request, token, tokenSecret, profile, cb) => {
+        console.log(profile);
         request.session.user = {
             id: 0,
             firstname : profile.displayName,
