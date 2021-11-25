@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
-const GitHubStrategy = require('passport-github').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
 
 module.exports = (app) => {
     app.use(passport.initialize());
@@ -65,10 +65,10 @@ module.exports = (app) => {
 
     },
     (request, token, tokenSecret, profile, cb) => {
-        console.log(profile);
+        //console.log(profile);
         request.session.user = {
             id: 0,
-            firstname : profile.displayName,
+            firstname : profile.displayName ?? profile.username,
             lastname : ''
         }
         return cb(null, request.session.user);
