@@ -1,9 +1,12 @@
 # nodejs-VOD
 
-Quick nodejs project to test 
+Quick bootcamp nodejs project to test 
  - express server
  - express session
  - mongodb session storage
- - flash messages
+ - bcrypt
+ - express flash messages
  - passportJs and different strategies (Google, GitHub, Twitter, Facebook)
- and make some test calls to an external api to fetch some data
+ - dotenv
+
+and make several calls to a public api to fetch some data and display it in html
