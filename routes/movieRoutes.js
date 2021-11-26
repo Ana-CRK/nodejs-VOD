@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const movieController = require('../controllers/MovieController');
-const auth = require('../auth');
+const isAuth = require('../isAuth');
 
 router.post('/search', movieController.searchOne);
 
-router.get('/add', auth, async (req, res) => {
+router.get('/add', isAuth, async (req, res) => {
     res.render('add_movie.ejs');
 })
 router.post('/add', movieController.addOne);

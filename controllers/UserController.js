@@ -1,6 +1,5 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
-const session = require('express-session');
 
 exports.signUp = async(req, res, next) => {
     const userExists = await User.findOne({email: req.body.email});
@@ -40,6 +39,7 @@ exports.logIn = async(req, res, next) => {
         res.redirect('/account/login');
         return;
     }
+    req.session.isAuth = true;
     req.session.user = user;
     res.redirect('/');
 }

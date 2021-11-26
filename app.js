@@ -1,31 +1,35 @@
+require('dotenv').config()
+
 const express = require('express');
 const app = express();
 
 const session = require('express-session');
-const { flash } = require('express-flash-message');
-
-require('dotenv').config()
-
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { expires: 60 * 1000 }
-}));
-
-require('./passport')(app);
-
-app.use(flash({ sessionKeyName: 'flashMessage', useCookieSession: true }));
-
-app.set('view engine', 'ejs');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_VOD)
     .then(() => {console.log('Connected to mongoose')})
     .catch(err => console.log('Connection error'));
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+const store = new MongoDBStore({
+    uri: process.env.DB_VOD,
+    collection: 'sessions'
+});
+store.on('error', function(error) {
+    console.log(error);
+});
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: { expires: 60 * 1000 }
+}));
+
 
 app.use((req, res, next) => {
     if (req.session.user) {
@@ -34,6 +38,12 @@ app.use((req, res, next) => {
     next();
 });
 
+require('./passport')(app);
+
+app.set('view engine', 'ejs');
+
+const { flash } = require('express-flash-message');
+app.use(flash({ sessionKeyName: 'flashMessage', useCookieSession: true }));
 app.use((req, res, next) => {
     req.consumeFlash('error').then((flash) => {
         res.locals.errors = flash;

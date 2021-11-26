@@ -5,7 +5,7 @@ const key = process.env.API_KEY;
 
 exports.getAll = async(req, res, next) => {
     const movies = await Movie.find();
-    console.log(movies);
+    //console.log(movies);
     res.render('all_movies.ejs', { movies })
 }
 
@@ -15,7 +15,7 @@ exports.getOne = async(req, res, next) => {
 }
 
 exports.addOne = async(req, res, next) => {
-    console.log(req.body);
+    //console.log(req.body);
     let actors = req.body.actors.split(", "); 
     const movie = new Movie({
         title: req.body.title,
